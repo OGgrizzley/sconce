@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: -8320918762812328179}
   - component: {fileID: 4952061632616471971}
   m_Layer: 0
-  m_Name: pfb_healthPoint
+  m_Name: pfa_healthPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

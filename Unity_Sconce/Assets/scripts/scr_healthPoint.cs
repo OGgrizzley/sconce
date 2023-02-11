@@ -14,10 +14,10 @@ public class scr_healthPoint : MonoBehaviour
         
         if (players == null) {// Stops injection
             players = GameObject.FindGameObjectsWithTag("Player");
-            var hp_lowest = 0;
+            float hp_lowest = 0;
             foreach (var p in players)
             {
-                var health = p.getHP();
+                var health = p.GetComponent<scr_player>().getHP();
                 Debug.Log("player "+ p.GetInstanceID() +" has "+ health +" health.");
 
                 if (hp_lowest > health) {
