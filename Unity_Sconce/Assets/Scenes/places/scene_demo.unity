@@ -334,7 +334,7 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!1001 &1998742857
+--- !u!1001 &1416468067
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -343,7 +343,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7402567703066268482, guid: 183f84aa36937f548abd1c4534e8b6e1, type: 3}
       propertyPath: m_Name
-      value: pfb_player
+      value: player
       objectReference: {fileID: 0}
     - target: {fileID: 7972266663945910754, guid: 183f84aa36937f548abd1c4534e8b6e1, type: 3}
       propertyPath: m_RootOrder
