@@ -27,7 +27,7 @@ Stretch goals:
 ## schedule  
 Deliverable  | Time
 ------------- | -------------
-~~Proposal | February 1, 2023, 14:30~~
+~~Proposal~~ | ~~February 1, 2023, 14:30~~
 Milestone Report One | March 1, 2023, 14:30  (In progress)
 Milestone Report Two | March 29, 2023, 14:30
 Final Report | April 11, 2023, 14:30
