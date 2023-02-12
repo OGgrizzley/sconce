@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class scr_player : MonoBehaviour
+public class Player : MonoBehaviour
 {
 
     private float hp_max = 100;
-    private float hp = 100;
+
+    [SerializeField] float hp;
 
     // Start is called before the first frame update
     void Start()
@@ -15,9 +16,9 @@ public class scr_player : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        
+        GetComponent<Rigidbody>().velocity = new Vector3(0,1,0);
     }
 
     // Health interfaces
