@@ -18,7 +18,7 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        GetComponent<Rigidbody>().velocity = new Vector3(0,1,0);
+        // GetComponent<Rigidbody>().velocity = new Vector3(0,1,0); // This moves the user upwards
     }
 
     // Health interfaces
@@ -30,16 +30,21 @@ public class Player : MonoBehaviour
     }
     public void changeHP(float _hp) 
     { 
-        if (hp+_hp > hp_max) // guard against over filling...
+         
+        if (hp+_hp < 1) // death from low...
+        { 
+            hp = 0;
+            die();
+            return;
+        } 
+        else if (hp+_hp > hp_max) // guard against over filling...
         {
             hp=hp_max;
             return;
 
-        } else if (hp+_hp < 1) { // death from low...
-            hp = 0;
-            die();
-            return;
-        } else { // otherwise change normally.
+        }
+        else // otherwise change normally.
+        {
             hp += _hp;
         }
     }
@@ -47,5 +52,6 @@ public class Player : MonoBehaviour
     
     private void die() {
         Debug.Log("YOU ARE DEAD.");
+        Destroy(gameObject);
     }
 }

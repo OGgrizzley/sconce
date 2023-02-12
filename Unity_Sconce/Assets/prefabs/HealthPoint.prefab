@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: -8320918762812328179}
   - component: {fileID: 4952061632616471971}
   m_Layer: 0
-  m_Name: pfa_healthPoint
+  m_Name: HealthPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -62,6 +62,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 373ebef96ba0e5e40b69f26c07811cf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  target_player: {fileID: 0}
+  players: []
+  restore: 15
+  speed: 0.5
 --- !u!1001 &4835385682947120231
 PrefabInstance:
   m_ObjectHideFlags: 0

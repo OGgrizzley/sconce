@@ -4,32 +4,42 @@ using UnityEngine;
 
 public class HealthPoint : MonoBehaviour
 {
-    GameObject target_player;
-    GameObject[] players;
+    public GameObject target_player;
+    public GameObject[] players;
     
+    // TODO: collision with any :Player increments their hp.
+    [SerializeField] float restore;
+    [SerializeField] float speed;
 
-    // Selects a target_player from the list of "Player" GOs with the least health.
+    // Selects a target_player from the list of "Player" GameObjects with the least health.
     void Start()
     {   
-        if (players == null) {// Stops injection
+        // if (players == null) // Stops injection
+        {
             players = GameObject.FindGameObjectsWithTag("Player");
-            float hp_lowest = 0;
+            float hp_lowest = 9999;
+
             foreach (var p in players)
             {
-                var health = p.GetComponent<Player>().getHP();
+                float health = p.GetComponent<Player>().getHP();
 
                 if (hp_lowest > health) {
                     hp_lowest = health;
                     target_player = p;
                 }
-                    
             }
-            Debug.Log("player-"+ target_player +" has the lowest health ("+ hp_lowest +").");
+            if (target_player != null) 
+            {
+                Debug.Log("player-"+ target_player.ToString() +" has the lowest health ("+ hp_lowest +").");
             return;
+            }
         }
-        
-
-        Debug.Log("Error: No players");
+        if (target_player == null)
+        {
+            Debug.Log("E: No players");
+            Destroy(gameObject);
+        }
+            
         return;
     }
 
@@ -37,7 +47,9 @@ public class HealthPoint : MonoBehaviour
     //Move towards target_player every frame
     void Update()
     {   
-        
-
+        if (target_player != null) {
+            transform.position += (target_player.transform.position - transform.position).normalized * speed * Time.deltaTime;
+            transform.LookAt(target_player.transform);
+        }
     }
 }
