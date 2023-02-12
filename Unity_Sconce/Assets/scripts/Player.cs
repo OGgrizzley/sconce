@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class scr_player : MonoBehaviour
+public class Player : MonoBehaviour
 {
 
     private float hp_max = 100;
-    private float hp = 100;
+
+    [SerializeField] float hp;
 
     // Start is called before the first frame update
     void Start()
@@ -15,9 +16,9 @@ public class scr_player : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        
+        // GetComponent<Rigidbody>().velocity = new Vector3(0,1,0); // This moves the user upwards
     }
 
     // Health interfaces
@@ -29,16 +30,21 @@ public class scr_player : MonoBehaviour
     }
     public void changeHP(float _hp) 
     { 
-        if (hp+_hp > hp_max) // guard against over filling...
+         
+        if (hp+_hp < 1) // death from low...
+        { 
+            hp = 0;
+            die();
+            return;
+        } 
+        else if (hp+_hp > hp_max) // guard against over filling...
         {
             hp=hp_max;
             return;
 
-        } else if (hp+_hp < 1) { // death from low...
-            hp = 0;
-            die();
-            return;
-        } else { // otherwise change normally.
+        }
+        else // otherwise change normally.
+        {
             hp += _hp;
         }
     }
@@ -46,5 +52,6 @@ public class scr_player : MonoBehaviour
     
     private void die() {
         Debug.Log("YOU ARE DEAD.");
+        Destroy(gameObject);
     }
 }
