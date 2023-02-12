@@ -17,7 +17,7 @@ Second elaboration goals:
 - Resources-gathering follower system.  
 - Protoype level.  
 
-Strech goals:  
+Stretch goals:  
 - Wavefunction collapse psuedo-random level generation.  
 - Shop + economy system.  
 - Plot?   
