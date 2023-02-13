@@ -4,17 +4,16 @@ using UnityEngine;
 
 public class HealthPoint : MonoBehaviour
 {
-    public GameObject target_player;
-    public GameObject[] players;
+    public GameObject target_player = null;
+    public GameObject[] players = null;
     
     // TODO: collision with any :Player increments their hp.
-    [SerializeField] float restore;
-    [SerializeField] float speed;
+    [SerializeField] float restore = 10f;
+    [SerializeField] float speed = 0.5f;
 
     // Selects a target_player from the list of "Player" GameObjects with the least health.
     void Start()
     {   
-        // if (players == null) // Stops injection
         {
             players = GameObject.FindGameObjectsWithTag("Player");
             float hp_lowest = 9999;
@@ -44,7 +43,7 @@ public class HealthPoint : MonoBehaviour
     }
 
     
-    //Move towards target_player every frame
+    //Move and face towards target_player speed / sec
     void Update()
     {   
         if (target_player != null) {
