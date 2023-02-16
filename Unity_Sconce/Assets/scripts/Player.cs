@@ -2,56 +2,93 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+
+public class Player : Vulnerable
 {
+    // Properties ///////////////////////////////////////////////////////
+    private CharacterController controller;
+    private Vector3 playerVelocity;
+    [SerializeField] private float playerSpeed = 5.0f;
+    [SerializeField] private float jumpHeight = 10.0f;
+    [SerializeField] private float gravityValue = 9.81f;
+    private bool groundedPlayer;
+    private bool canJump = true;
+    
 
-    private float hp_max = 100;
 
-    [SerializeField] float hp;
+    // Constructors /////////////////////////////////////////////////////
 
-    // Start is called before the first frame update
+
+
+    // Overrides ////////////////////////////////////////////////////////
+    // What happens when a :Player takes damage?
+    public override void takeDamage(string _type, float _amount) {
+        if (_amount > 0) return; //Guard clause, not damaging.
+        changeHP(_amount);
+        return;
+    }
+    // What happens when (:Player.hp < 0)?
+    public override void die() {
+        Debug.Log("DEAD.");
+        Destroy(gameObject);
+        return;
+    }
+
+
+
+    // Methods //////////////////////////////////////////////////////////
     void Start()
     {
-        
+        hp = hp_max;
+        controller = gameObject.AddComponent<CharacterController>();
     }
-
-    // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
-        // GetComponent<Rigidbody>().velocity = new Vector3(0,1,0); // This moves the user upwards
+        move();
     }
-
-    // Health interfaces
-    // TODO: divide into heal(float amount) and damage(float amount, Death style)
-    //      - Death data structure informing death animations.
-    public float getHP() 
-    {
-        return hp;
-    }
-    public void changeHP(float _hp) 
-    { 
-         
-        if (hp+_hp < 1) // death from low...
-        { 
-            hp = 0;
-            die();
-            return;
-        } 
-        else if (hp+_hp > hp_max) // guard against over filling...
-        {
-            hp=hp_max;
-            return;
-
-        }
-        else // otherwise change normally.
-        {
-            hp += _hp;
-        }
-    }
-
     
-    private void die() {
-        Debug.Log("YOU ARE DEAD.");
-        Destroy(gameObject);
+    // TODO: split this into info gathering (Update) and executing (FixedUpdate).
+    void move() 
+    {
+        // Gotten from: https://docs.unity3d.com/ScriptReference/Input.GetAxis.html
+        // Uses axis define in the Input Manager.
+        groundedPlayer = controller.isGrounded;
+
+        // Stops player from:
+        //  - Falling thorugh the floor
+        //  - Building downward momentum while remining on the ground.
+        //  - Allows for a post-leap jump if player didn't jump from the ground.
+        if (groundedPlayer && playerVelocity.y < 0)
+        {
+            canJump = true;
+            playerVelocity.y = 0f;
+        }
+        
+        // Clamp vertical speed from (-40 , 40).
+        playerVelocity.y = Mathf.Clamp(playerVelocity.y, -40, 40); 
+
+        // Obtain a normalized vector that describes the player's intentions
+        Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        move = move.normalized;
+
+
+        // tell the controller where to move horizontally.
+        controller.Move(move * Time.deltaTime * playerSpeed);
+
+        // Instantaneous potential change of height
+        if (Input.GetButton("Jump") && canJump)
+        {
+            playerVelocity.y = jumpHeight;
+            canJump = false;
+        }
+
+        // with constant deccel due to gravity
+        playerVelocity.y += -gravityValue * Time.deltaTime;
+        
+        // tell the controller where to move vertically.
+        controller.Move(playerVelocity * Time.deltaTime);
     }
+
+
 }
+
