@@ -9,10 +9,12 @@ public class Player : Vulnerable
     private CharacterController controller;
     private Vector3 playerVelocity;
     [SerializeField] private float playerSpeed = 5.0f;
-    [SerializeField] private float jumpHeight = 10.0f;
     [SerializeField] private float gravityValue = 9.81f;
+    [SerializeField] private float jumpHeight = 10.0f;
     private bool groundedPlayer;
     private bool canJump = true;
+    private float playerFallHeight = -35f;
+    private float fallDamage = 0f;
     
 
 
@@ -23,7 +25,11 @@ public class Player : Vulnerable
     // Overrides ////////////////////////////////////////////////////////
     // What happens when a :Player takes damage?
     public override void takeDamage(string _type, float _amount) {
-        if (_amount > 0) return; //Guard clause, not damaging.
+        if (_amount > 0)
+            if (_type != "heal")
+                return; //Guard clause: Not damaging.
+
+
         changeHP(_amount);
         return;
     }
@@ -39,7 +45,7 @@ public class Player : Vulnerable
     // Methods //////////////////////////////////////////////////////////
     void Start()
     {
-        hp = hp_max;
+        hp = hp_max/2;
         controller = gameObject.AddComponent<CharacterController>();
     }
     void Update()
@@ -50,9 +56,13 @@ public class Player : Vulnerable
     // TODO: split this into info gathering (Update) and executing (FixedUpdate).
     void move() 
     {
+        
         // Gotten from: https://docs.unity3d.com/ScriptReference/Input.GetAxis.html
         // Uses axis define in the Input Manager.
         groundedPlayer = controller.isGrounded;
+    
+        if (playerVelocity.y < playerFallHeight)
+            fallDamage = playerVelocity.y;
 
         // Stops player from:
         //  - Falling thorugh the floor
@@ -60,6 +70,12 @@ public class Player : Vulnerable
         //  - Allows for a post-leap jump if player didn't jump from the ground.
         if (groundedPlayer && playerVelocity.y < 0)
         {
+            if (fallDamage != 0f) 
+            {
+                takeDamage("crush", fallDamage);
+                fallDamage = 0f;
+            }    
+            
             canJump = true;
             playerVelocity.y = 0f;
         }
@@ -79,6 +95,7 @@ public class Player : Vulnerable
         if (Input.GetButton("Jump") && canJump)
         {
             playerVelocity.y = jumpHeight;
+            fallDamage = 0f;
             canJump = false;
         }
 

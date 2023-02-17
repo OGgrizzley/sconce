@@ -2,22 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-
-
-
-
-
-
-
-
-
-
 public abstract class Vulnerable : MonoBehaviour
 {
     // Properties ///////////////////////////////////////////////////////
     [SerializeField] protected float hp_max;
-    protected float hp;
+    [SerializeField] protected float hp;
 
     
 

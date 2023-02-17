@@ -5,58 +5,63 @@ using UnityEngine;
 public class HealthPoint : MonoBehaviour
 {
     // Properties ///////////////////////////////////////////////////////
-    public GameObject target_player = null;
-    public GameObject[] players = null;
+    private Player target_player = null;
     
     // TODO: collision with any :Player increments their hp.
-    [SerializeField] float restore = 10f;
+    [SerializeField] float restore = 25f;
     [SerializeField] float speed = 0.5f;
 
     // Methods //////////////////////////////////////////////////////////
-    // Selects a target_player from the list of "Player" GameObjects with the least health.
-    void Start()
+    private void Start()
     {   
-        getTarget();
+        target_player = getLowestPlayer();
     }
 
-    //Move and face towards target_player speed / sec
     void Update()
     {   
+        //Move and face towards target_player speed / sec
         if (target_player != null) {
             transform.position += (target_player.transform.position - transform.position).normalized * speed * Time.deltaTime;
             transform.LookAt(target_player.transform);
         }
     }
 
-    void getTarget() {
+
+    // Returns a :Player from GameObjects with the "Player" tag with the lowest hp.
+    Player getLowestPlayer() {
+
+        Player target = null;
+        float hp_lowest = 9999f;
+
+        foreach (var p in GameObject.FindGameObjectsWithTag("Player"))
         {
-            players = GameObject.FindGameObjectsWithTag("Player");;
-            float hp_lowest = 9999;
+            if (p !is Player)
+                break;
 
-            foreach (var p in players)
-            {
-                float health = p.GetComponent<Vulnerable>().getHP();
-
-                if (hp_lowest > health) {
-                    hp_lowest = health;
-                    target_player = p;
-                }
-            }
-            if (target_player != null) 
-            {
-                Debug.Log("player-"+ target_player.ToString() +" has the lowest health ("+ hp_lowest +").");
-                return;
-            }
+            float health = p.GetComponent<Vulnerable>().getHP();
+            if (hp_lowest < health) 
+                break;
+            
+            hp_lowest = health;
+            target = p.GetComponent<Player>();
         }
         
-        // this is currently redundant, should always evaluate to true.
-        if (target_player == null)
+        if (target is Player) 
         {
-            Debug.Log("E: No players");
+            Debug.Log("Targeted player-"+ target.ToString() +" ("+ hp_lowest +"HP)");
+            return target;
+        }
+
+        return null;
+    }
+
+    private void OnCollisionEnter(Collision col)
+    {
+        if (col.gameObject.GetComponent<Player>())
+        {
+            col.gameObject.GetComponent<Vulnerable>().takeDamage("heal", restore);
             Destroy(gameObject);
         }
     }
 
-    
-    
 }
